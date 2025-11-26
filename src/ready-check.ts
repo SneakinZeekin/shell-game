@@ -47,13 +47,13 @@ export class ShellGameReadyCheck extends Application {
 
   static readyCheck() {
     const users = (game.users?.contents ?? []).filter(u => u.active);
-    if (!game.user?.isGM) return; 
+    if (!game.user?.isGM) return;
 
     if (!ShellGameReadyCheck.currentTokenName) return;
 
     const allReady = users.every(u => {
       const id = u.id ?? "";
-      if (!id) return true; 
+      if (!id) return true;
       const st = ShellGameReadyCheck.statuses[id];
       return st === "ready";
     });
@@ -125,10 +125,18 @@ async function performShellGame(name: string) {
     }
   }
 
-  const NAME       = name;
-  const TOTAL_MS   = 8000;
-  const MOVE_MS_MIN = 350;
-  const MOVE_MS_MAX = 350;
+  const NAME = name;
+  const runtimeSetting = Number(game.settings.get("shell-game", "runtimeMs") ?? 8000);
+  const minMoveSetting = Number(game.settings.get("shell-game", "minMoveMs") ?? 350);
+  const maxMoveSetting = Number(game.settings.get("shell-game", "maxMoveMs") ?? 350);
+
+  const TOTAL_MS_RAW = isNaN(runtimeSetting) ? 8000 : runtimeSetting;
+  const MIN_RAW = isNaN(minMoveSetting) ? 350 : minMoveSetting;
+  const MAX_RAW = isNaN(maxMoveSetting) ? 350 : maxMoveSetting;
+
+  const TOTAL_MS = Math.max(1000, TOTAL_MS_RAW);
+  const MOVE_MS_MIN = Math.min(MIN_RAW, MAX_RAW);
+  const MOVE_MS_MAX = Math.max(MIN_RAW, MAX_RAW);
 
   const toks =
     (canvas.tokens?.placeables ?? []).filter(t => {
@@ -141,10 +149,10 @@ async function performShellGame(name: string) {
     return;
   }
 
-  const slots = toks.map(t => ({ x: t.document.x, y: t.document.y })); 
+  const slots = toks.map(t => ({ x: t.document.x, y: t.document.y }));
 
-  let tokenAtSlot = toks.map((_, i) => i); 
-  let slotOfToken = toks.map((_, i) => i); 
+  let tokenAtSlot = toks.map((_, i) => i);
+  let slotOfToken = toks.map((_, i) => i);
 
   const rint = (a: number, b: number) =>
     Math.floor(Math.random() * (b - a + 1)) + a;
@@ -176,12 +184,12 @@ async function performShellGame(name: string) {
       { x: dest.x, y: dest.y },
       { animate: true, animation: { duration: dur } }
     );
-    await waitMs(dur + 20); 
+    await waitMs(dur + 20);
   }
 
   function buildRotMap(slotIdxs: number[]): [number, number][] {
     const order = shuffleArr([...slotIdxs]);
-    const dir = Math.random() < 0.5 ? 1 : -1; 
+    const dir = Math.random() < 0.5 ? 1 : -1;
     const n = order.length;
     const pairs: [number, number][] = [];
     for (let i = 0; i < n; i++) {

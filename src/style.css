@@ -6,13 +6,22 @@
   margin: 4px;
 }
 
+.shell-user-list {
+  font-size: 1.2rem;   
+  line-height: 1.4rem;  
+  margin-top: 8px;
+}
+
+.shell-user-list li {
+  margin-bottom: 4px;  
+}
+
 .shellgame-buttons {
   display: flex;
   justify-content: space-between;
   gap: 10px;
   margin-bottom: 10px;
 }
-
 
 .shellgame-btn {
   flex: 1;

@@ -1,8 +1,11 @@
 import { ShellGameReadyCheck } from "./ready-check";
+import { registerSettings } from "./settings";
 import "./style.css";
 
 Hooks.once("init", () => {
   console.log("Shell Game | Initializing");
+
+  registerSettings();
 
   loadTemplates([
     "modules/shell-game/templates/ready-check.html"
