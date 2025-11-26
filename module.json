@@ -13,7 +13,7 @@
   "esmodules": ["module.js"],
   "styles": ["main.css.css"],
   "templates": ["templates/ready-check.html"],
-  "url": "",
-  "manifest": "",
-  "download": ""
+  "url": "https://github.com/SneakinZeekin/shell-game",
+  "manifest": "https://raw.githubusercontent.com/SneakinZeekin/shell-game/main/module.json",
+  "download": "https://raw.githubusercontent.com/SneakinZeekin/shell-game/main/release/shell-game.zip"
 }
