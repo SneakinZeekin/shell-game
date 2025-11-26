@@ -25,7 +25,7 @@ export class ShellGameReadyCheck extends Application {
   static openWindow() {
     ShellGameReadyCheck.statuses = {};
 
-    const users = game.users?.contents ?? [];
+    const users = (game.users?.contents ?? []).filter(u => u.active);
     for (const u of users) {
       const id = u.id ?? "";
       if (!id) continue;
@@ -46,7 +46,7 @@ export class ShellGameReadyCheck extends Application {
   }
 
   static readyCheck() {
-    const users = game.users?.contents ?? [];
+    const users = (game.users?.contents ?? []).filter(u => u.active);
     if (!game.user?.isGM) return; 
 
     if (!ShellGameReadyCheck.currentTokenName) return;
@@ -71,7 +71,7 @@ export class ShellGameReadyCheck extends Application {
   }
 
   getData() {
-    const users = game.users?.contents ?? [];
+    const users = (game.users?.contents ?? []).filter(u => u.active);
     return {
       users: users.map(u => {
         const id = u.id ?? "";
