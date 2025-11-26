@@ -1,0 +1,20 @@
+<div class="shell-check-wrapper">
+
+  <div class="shellgame-buttons">
+    <button id="shell-ready" class="shellgame-btn ready">Ready</button>
+    <button id="shell-no" class="shellgame-btn no">Not Ready</button>
+  </div>
+
+  <ul>
+    {{#each users}}
+      <li>
+        <strong>{{this.name}}:</strong>
+        {{#if (eq this.status "ready")}}✔️
+        {{else if (eq this.status "no")}}✖️
+        {{else}}❔
+        {{/if}}
+      </li>
+    {{/each}}
+  </ul>
+
+</div>

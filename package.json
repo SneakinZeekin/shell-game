@@ -1,0 +1,25 @@
+{
+  "name": "shell-game",
+  "version": "0.1.0",
+  "description": "A token shuffling module for Foundry VTT.",
+  "scripts": {
+    "build": "vite build && npm run build:copy",
+    "build:copy": "copyfiles module.json templates/** dist",
+    "dev": "vite --watch",
+    "package": "npm run build && npm run package:prep && npm run package:zip && npm run package:clean",
+    "package:prep": "rimraf release/shell-game && mkdirp release/shell-game && copyfiles -u 1 \"dist/**/*\" release/shell-game",
+    "package:zip": "cd release && npx bestzip shell-game.zip shell-game",
+    "package:clean": "rimraf release/shell-game"
+
+  },
+  "devDependencies": {
+    "@league-of-foundry-developers/foundry-vtt-types": "^13.341.1",
+    "bestzip": "^2.2.1",
+    "copyfiles": "^2.4.1",
+    "mkdirp": "^3.0.1",
+    "rimraf": "^6.1.2",
+    "tslib": "^2.6.2",
+    "typescript": "^5.6.3",
+    "vite": "^5.2.0"
+  }
+}

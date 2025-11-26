@@ -1,0 +1,41 @@
+.shell-check-wrapper {
+  padding: 10px;
+}
+
+.shell-check-wrapper button {
+  margin: 4px;
+}
+
+.shellgame-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+
+.shellgame-btn {
+  flex: 1;
+  padding: 6px 10px;
+  font-size: 14px;
+  text-align: center;
+  border: 1px solid #555;
+  border-radius: 4px;
+  background: #eee;
+  cursor: pointer;
+}
+
+.shellgame-btn.ready {
+  background: #cbe8cb;
+  border-color: #4c8a4c;
+}
+
+.shellgame-btn.no {
+  background: #e8cbcb;
+  border-color: #8a4c4c;
+}
+
+.shellgame-btn:hover {
+  filter: brightness(0.95);
+}
+

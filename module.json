@@ -1,0 +1,19 @@
+{
+  "id": "shell-game",
+  "title": "Shell Game",
+  "description": "A token shuffling module for Foundry VTT.",
+  "version": "0.1.0",
+  "authors": [
+    { "name": "SneakinZeekin", "url": "https://github.com/SneakinZeekin" }
+  ],
+  "compatibility": {
+    "minimum": "11",
+    "verified": "11"
+  },
+  "esmodules": ["module.js"],
+  "styles": ["main.css.css"],
+  "templates": ["templates/ready-check.html"],
+  "url": "",
+  "manifest": "",
+  "download": ""
+}
