@@ -33,4 +33,13 @@ export function registerSettings() {
         integer: true,
         range: { min: 50, max: 2500, step: 50 }
     });
+
+    game.settings.register(MODULE_ID, "forceZoom", {
+        name: "Shell Game: Force Zoom to Tokens",
+        hint: "If enabled, all players will automatically zoom to the tokens when they click Ready.",
+        scope: "world",
+        config: true,
+        type: Boolean,
+        default: true
+    });
 }

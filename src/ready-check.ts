@@ -96,7 +96,8 @@ export class ShellGameReadyCheck extends Application {
       game.user?.updateTokenTargets([]);
 
       const tokenName = ShellGameReadyCheck.currentTokenName;
-      if (tokenName) {
+      const forceZoom = game.settings.get("shell-game", "forceZoom");
+      if (forceZoom && tokenName) {
         const placeables = canvas?.tokens?.placeables ?? [];
         const toks = placeables.filter(t => isMatchingTokenName(t, tokenName));
         if (toks.length > 0) zoomToTokens(toks);

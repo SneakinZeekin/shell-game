@@ -20,7 +20,7 @@ export function zoomToTokens(tokens) {
   const centerX = minX + boxWidth / 2;
   const centerY = minY + boxHeight / 2;
 
-  const padding = 200;
+  const padding = 2000;
 
   const screenW = window.innerWidth - padding;
   const screenH = window.innerHeight - padding;
