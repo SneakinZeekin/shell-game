@@ -10,6 +10,7 @@
     "minimum": "11",
     "verified": "11"
   },
+  "socket": true,
   "esmodules": ["module.js"],
   "styles": ["main.css.css"],
   "templates": ["templates/ready-check.html"],
