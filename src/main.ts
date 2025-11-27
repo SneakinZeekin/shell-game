@@ -41,7 +41,12 @@ Hooks.once("ready", () => {
     }
 
     const placeables = canvas?.tokens?.placeables ?? [];
-    const tokens = placeables.filter(t => t.name === tokenName);
+    const tokens = placeables.filter(t => {
+      if (!t.name) return false;
+      if (t.name === tokenName) return true;t
+      if (t.name.startsWith(tokenName + " (Fake)")) return true;
+      return false;
+    });
 
     if (tokens.length < 2) {
       ui.notifications?.error(
