@@ -1,5 +1,5 @@
 import { ShellGameReadyCheck } from "./ready-check";
-import { ShellGameSetup } from "./setup"; 
+import { ShellGameSetup } from "./setup";
 import { registerSettings } from "./settings";
 import "./style.css";
 
@@ -9,7 +9,8 @@ Hooks.once("init", () => {
   registerSettings();
 
   loadTemplates([
-    "modules/shell-game/templates/ready-check.html"
+    "modules/shell-game/templates/ready-check.html",
+    "modules/shell-game/templates/shell-setup.html" 
   ]);
 });
 
@@ -22,14 +23,15 @@ Hooks.once("ready", () => {
 
     if (!game.user?.isGM) {
       ui.notifications?.error("Shell Game: Only the GM can use /shell.");
-      return false;
+      return false; 
     }
 
     const args = trimmed.slice("/shell".length).trim();
 
     if (args.toLowerCase() === "setup") {
+      console.log("Shell Game | Opening setup window");
       ShellGameSetup.openWindow();
-      return false; 
+      return false;
     }
 
     const tokenName = args;

@@ -5,6 +5,17 @@ export class ShellGameSetup extends Application {
     new ShellGameSetup().render(true);
   }
 
+  static get defaultOptions(): ApplicationOptions {
+    const options = super.defaultOptions;
+    options.id = "shell-game-setup";
+    options.title = "Shell Game Setup";
+    options.template = "modules/shell-game/templates/shell-setup.html";
+    options.width = 350;
+    options.height = "auto";
+    options.popOut = true;
+    return options;
+  }
+
   getData(): any {
     const tokens = (canvas.tokens?.placeables ?? []).map(t => ({
       id: t.id ?? "",
