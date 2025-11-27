@@ -11,7 +11,7 @@ Hooks.once("init", () => {
 
   loadTemplates([
     "modules/shell-game/templates/ready-check.html",
-    "modules/shell-game/templates/shell-setup.html" 
+    "modules/shell-game/templates/shell-setup.html"
   ]);
 });
 
@@ -24,7 +24,7 @@ Hooks.once("ready", () => {
 
     if (!game.user?.isGM) {
       ui.notifications?.error("Shell Game: Only the GM can use /shell.");
-      return false; 
+      return false;
     }
 
     const args = trimmed.slice("/shell".length).trim();
@@ -60,15 +60,24 @@ Hooks.once("ready", () => {
 
     return false;
   });
-});
 
-Hooks.once("socketlib.ready", () => {
-  game.socket.on("module.shell-game", (data: { type: "start-check" | "status"; tokenName?: string; userId?: string; status?: "ready" | "no"; }) => {
-    console.log("Shell Game | socket received:", event);
-    if (data.type === "start-check" && data.tokenName) {
-      ShellGameReadyCheck.start(data.tokenName);
-    } else if (data.type === "status" && data.userId && data.status) {
-      ShellGameReadyCheck.updateStatus(data.userId, data.status);
+  console.log("Shell Game | Registering socket handler");
+
+  game.socket?.on(
+    "module.shell-game",
+    (data: {
+      type: "start-check" | "status";
+      tokenName?: string;
+      userId?: string;
+      status?: "ready" | "no";
+    }) => {
+      console.log("Shell Game | socket received:", data);
+
+      if (data.type === "start-check" && data.tokenName) {
+        ShellGameReadyCheck.start(data.tokenName);
+      } else if (data.type === "status" && data.userId && data.status) {
+        ShellGameReadyCheck.updateStatus(data.userId, data.status);
+      }
     }
-  });
+  );
 });
