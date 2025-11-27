@@ -3,6 +3,11 @@ import { ShellGameSetup } from "./setup";
 import { registerSettings } from "./settings";
 import "./style.css";
 
+function isMatchingTokenName(token: Token, baseName: string): boolean {
+  const name = token.name ?? "";
+  return name === baseName || name === `${baseName} (Fake)`;
+}
+
 Hooks.once("init", () => {
   console.log("Shell Game | Initializing");
 
@@ -41,12 +46,7 @@ Hooks.once("ready", () => {
     }
 
     const placeables = canvas?.tokens?.placeables ?? [];
-    const tokens = placeables.filter(t => {
-      if (!t.name) return false;
-      if (t.name === tokenName) return true;t
-      if (t.name.startsWith(tokenName + " (Fake)")) return true;
-      return false;
-    });
+    const tokens = placeables.filter(t => isMatchingTokenName(t, tokenName));
 
     if (tokens.length < 2) {
       ui.notifications?.error(
