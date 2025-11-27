@@ -10,20 +10,29 @@ export class ShellGameSetup extends Application {
     options.id = "shell-game-setup";
     options.title = "Shell Game Setup";
     options.template = "modules/shell-game/templates/shell-setup.html";
-    options.width = 350;
-    options.height = "auto";
-    options.popOut = true;
-    return options;
-  }
+        options.width = 350;
+        options.height = "auto";
+        options.popOut = true;
+        return options;
+    }
 
-  getData(): any {
-    const tokens = (canvas.tokens?.placeables ?? []).map(t => ({
-      id: t.id ?? "",
-      name: t.name ?? t.document.name ?? "Unnamed"
-    }));
+    getData(): any {
+        const allTokens = canvas.tokens?.placeables ?? [];
 
-    return { tokens };
-  }
+        const unownedTokens = allTokens.filter(t => {
+            const actor = t.actor;
+            if (!actor) return true;
+
+            return !actor.hasPlayerOwner;
+        });
+
+        const tokens = unownedTokens.map(t => ({
+            id: t.id ?? "",
+            name: t.name ?? t.document.name ?? "Unnamed"
+        }));
+
+        return { tokens };
+    }
 
   activateListeners(html: JQuery) {
     super.activateListeners(html);
@@ -50,12 +59,11 @@ export class ShellGameSetup extends Application {
         return;
       }
 
-      this.close();
-      ShellGameSetup.waitForClickToCreateFake(sourceToken.id!);
+      ShellGameSetup.createFake(sourceToken.id!);
     });
   }
 
-  static waitForClickToCreateFake(sourceTokenId: string) {
+  static createFake(sourceTokenId: string) {
     const sourceToken = canvas.tokens?.get(sourceTokenId);
     if (!sourceToken) {
       ui.notifications.error("Shell Game: Selected token no longer exists.");
