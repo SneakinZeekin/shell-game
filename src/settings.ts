@@ -9,7 +9,7 @@ export function registerSettings() {
         type: Number,
         default: 8000,
         integer: true,
-        range: { min: 1000, max: 60000 }
+        range: { min: 1000, max: 60000, step: 50 }
     });
 
     game.settings.register(MODULE_ID, "minMoveMs", {
@@ -20,7 +20,7 @@ export function registerSettings() {
         type: Number,
         default: 350,
         integer: true,
-        range: { min: 50, max: 5000 }
+        range: { min: 50, max: 5000, step: 50 }
     });
 
     game.settings.register(MODULE_ID, "maxMoveMs", {
@@ -31,7 +31,7 @@ export function registerSettings() {
         type: Number,
         default: 400,
         integer: true,
-        range: { min: 50, max: 5000 }
+        range: { min: 50, max: 5000, step: 50 }
     });
 
 }
