@@ -1,12 +1,8 @@
 import { ShellGameReadyCheck } from "./ready-check";
 import { ShellGameSetup } from "./setup";
 import { registerSettings } from "./settings";
+import { isMatchingTokenName } from "./utils";
 import "./style.css";
-
-function isMatchingTokenName(token: Token, baseName: string): boolean {
-  const name = token.name ?? "";
-  return name === baseName || name === `${baseName} (Fake)`;
-}
 
 Hooks.once("init", () => {
   console.log("Shell Game | Initializing");

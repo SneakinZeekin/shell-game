@@ -1,3 +1,5 @@
+import { isMatchingTokenName } from "./utils";
+
 export interface ReadyStatusMap {
   [userId: string]: "unknown" | "ready" | "no";
 }
@@ -139,10 +141,9 @@ async function performShellGame(name: string) {
   const MOVE_MS_MAX = Math.max(MIN_RAW, MAX_RAW);
 
   const toks =
-    (canvas.tokens?.placeables ?? []).filter(t => {
-      const n = (t.name ?? t.document?.name ?? "").trim().toLowerCase();
-      return n === NAME.trim().toLowerCase();
-    }) as Token[];
+    (canvas.tokens?.placeables ?? []).filter(t =>
+      isMatchingTokenName(t as Token, NAME)
+    ) as Token[];
 
   if (toks.length < 2) {
     ui.notifications?.warn(`Shell Game: Need at least two tokens named "${NAME}" on this scene.`);
