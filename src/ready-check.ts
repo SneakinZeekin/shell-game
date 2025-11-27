@@ -45,31 +45,6 @@ export class ShellGameReadyCheck extends Application {
     }
   }
 
-  static readyCheck() {
-    const users = (game.users?.contents ?? []).filter(u => u.active);
-    if (!game.user?.isGM) return;
-
-    if (!ShellGameReadyCheck.currentTokenName) return;
-
-    const allReady = users.every(u => {
-      const id = u.id ?? "";
-      if (!id) return true;
-      const st = ShellGameReadyCheck.statuses[id];
-      return st === "ready";
-    });
-
-    if (!allReady) return;
-
-    for (const win of Object.values(ui.windows)) {
-      if (win instanceof ShellGameReadyCheck) win.close();
-    }
-
-    const name = ShellGameReadyCheck.currentTokenName;
-    ShellGameReadyCheck.currentTokenName = null;
-
-    void performShellGame(name);
-  }
-
   getData() {
     const users = (game.users?.contents ?? [])
       .filter(u => u.active && !u.isGM);
@@ -137,6 +112,10 @@ export class ShellGameReadyCheck extends Application {
         ui.notifications?.warn("Not all players are ready.");
         return;
       }
+
+      game.socket?.emit("module.shell-game", {
+        type: "close-check"
+      });
 
       for (const win of Object.values(ui.windows)) {
         if (win instanceof ShellGameReadyCheck) win.close();

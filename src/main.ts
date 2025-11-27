@@ -66,7 +66,7 @@ Hooks.once("ready", () => {
   game.socket?.on(
     "module.shell-game",
     (data: {
-      type: "start-check" | "status";
+      type: "start-check" | "close-check" | "status" ;
       tokenName?: string;
       userId?: string;
       status?: "ready" | "no";
@@ -75,6 +75,10 @@ Hooks.once("ready", () => {
 
       if (data.type === "start-check" && data.tokenName) {
         ShellGameReadyCheck.start(data.tokenName);
+      } else if (data.type === "close-check") {
+        for (const win of Object.values(ui.windows)) {
+          if (win instanceof ShellGameReadyCheck) win.close();
+        }
       } else if (data.type === "status" && data.userId && data.status) {
         ShellGameReadyCheck.updateStatus(data.userId, data.status);
       }
