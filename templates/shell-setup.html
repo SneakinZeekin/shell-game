@@ -1,0 +1,30 @@
+<form class="shell-setup-form">
+  <div class="shell-setup-body">
+    {{#if tokens.length}}
+      <p>Select a token to clone:</p>
+      <ul class="shell-setup-token-list">
+        {{#each tokens}}
+          <li>
+            <label>
+              <input
+                type="radio"
+                name="shell-source-token"
+                value="{{id}}"
+                {{#if @first}}checked{{/if}}
+              />
+              {{name}}
+            </label>
+          </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <p>No tokens found in the current scene.</p>
+    {{/if}}
+  </div>
+
+  <footer class="sheet-footer flexrow">
+    <button type="button" name="shell-create-fake" class="shell-button-main">
+      Create Fake
+    </button>
+  </footer>
+</form>

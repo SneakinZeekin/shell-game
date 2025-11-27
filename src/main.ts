@@ -1,4 +1,5 @@
 import { ShellGameReadyCheck } from "./ready-check";
+import { ShellGameSetup } from "./setup"; 
 import { registerSettings } from "./settings";
 import "./style.css";
 
@@ -15,21 +16,25 @@ Hooks.once("init", () => {
 Hooks.once("ready", () => {
   console.log("Shell Game | Ready");
 
-  // Listen for /shell commands in chat
   Hooks.on("chatMessage", (_log, content: string, _chatData) => {
     const trimmed = content.trim();
     if (!trimmed.startsWith("/shell")) return;
 
-    // Only GM can use it
     if (!game.user?.isGM) {
       ui.notifications?.error("Shell Game: Only the GM can use /shell.");
-      return false; 
+      return false;
     }
 
     const args = trimmed.slice("/shell".length).trim();
+
+    if (args.toLowerCase() === "setup") {
+      ShellGameSetup.openWindow();
+      return false; 
+    }
+
     const tokenName = args;
     if (!tokenName) {
-      ui.notifications?.error("Usage: /shell TOKEN_NAME");
+      ui.notifications?.error("Usage: /shell TOKEN_NAME  or  /shell setup");
       return false;
     }
 
