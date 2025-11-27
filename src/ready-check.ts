@@ -1,4 +1,4 @@
-import { isMatchingTokenName } from "./utils";
+import { isMatchingTokenName, zoomToTokens } from "./utils";
 
 export interface ReadyStatusMap {
   [userId: string]: "unknown" | "ready" | "no";
@@ -93,8 +93,14 @@ export class ShellGameReadyCheck extends Application {
       const currentUserId = game.user?.id;
       if (!currentUserId) return;
 
-      // Clear all targets for this user
       game.user?.updateTokenTargets([]);
+
+      const tokenName = ShellGameReadyCheck.currentTokenName;
+      if (tokenName) {
+        const placeables = canvas?.tokens?.placeables ?? [];
+        const toks = placeables.filter(t => isMatchingTokenName(t, tokenName));
+        if (toks.length > 0) zoomToTokens(toks);
+      }
 
       (game.socket as any).emit("module.shell-game", {
         type: "status",
