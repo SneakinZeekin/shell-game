@@ -20,7 +20,7 @@ export function zoomToTokens(tokens) {
   const centerX = minX + boxWidth / 2;
   const centerY = minY + boxHeight / 2;
 
-  const padding = 500;
+  const padding = 350;
 
   const screenW = window.innerWidth - padding;
   const screenH = window.innerHeight - padding;
@@ -37,5 +37,34 @@ export function zoomToTokens(tokens) {
     y: centerY,
     scale,
     duration: 750
+  });
+}
+
+export function showCountdown(): Promise<void> {
+  return new Promise(async (resolve) => {
+    const overlay = document.createElement("div");
+    overlay.id = "shellgame-countdown";
+    overlay.style.position = "absolute";
+    overlay.style.top = "50%";
+    overlay.style.left = "50%";
+    overlay.style.transform = "translate(-50%, -50%)";
+    overlay.style.fontSize = "96px";
+    overlay.style.fontWeight = "bold";
+    overlay.style.color = "white";
+    overlay.style.textShadow = "0 0 20px black";
+    overlay.style.zIndex = "9999";
+    overlay.style.pointerEvents = "none";
+
+    document.body.appendChild(overlay);
+
+    const nums = ["3", "2", "1"];
+
+    for (const n of nums) {
+      overlay.textContent = n;
+      await new Promise(res => setTimeout(res, 1000));
+    }
+
+    overlay.remove();
+    resolve();
   });
 }

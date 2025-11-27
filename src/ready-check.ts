@@ -1,4 +1,4 @@
-import { isMatchingTokenName, zoomToTokens } from "./utils";
+import { isMatchingTokenName, zoomToTokens, showCountdown } from "./utils";
 
 export interface ReadyStatusMap {
   [userId: string]: "unknown" | "ready" | "no";
@@ -102,7 +102,7 @@ export class ShellGameReadyCheck extends Application {
       ShellGameReadyCheck.updateStatus(currentUserId, "no");
     });
 
-    html.find("#shell-start").on("click", () => {
+    html.find("#shell-start").on("click", async () => {
       if (!game.user?.isGM) return;
 
       const allReady = Object.values(ShellGameReadyCheck.statuses)
@@ -123,6 +123,12 @@ export class ShellGameReadyCheck extends Application {
 
       const name = ShellGameReadyCheck.currentTokenName;
       ShellGameReadyCheck.currentTokenName = null;
+
+      game.socket?.emit("module.shell-game", {
+        type: "countdown"
+      });
+
+      await showCountdown();
 
       if (name) performShellGame(name);
     });

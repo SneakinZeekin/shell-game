@@ -1,7 +1,7 @@
 import { ShellGameReadyCheck } from "./ready-check";
 import { ShellGameSetup } from "./setup";
 import { registerSettings } from "./settings";
-import { isMatchingTokenName } from "./utils";
+import { isMatchingTokenName, showCountdown } from "./utils";
 import "./style.css";
 
 Hooks.once("init", () => {
@@ -66,7 +66,7 @@ Hooks.once("ready", () => {
   game.socket?.on(
     "module.shell-game",
     (data: {
-      type: "start-check" | "close-check" | "status" ;
+      type: "start-check" | "close-check" | "status" | "countdown";
       tokenName?: string;
       userId?: string;
       status?: "ready" | "no";
@@ -81,6 +81,9 @@ Hooks.once("ready", () => {
         }
       } else if (data.type === "status" && data.userId && data.status) {
         ShellGameReadyCheck.updateStatus(data.userId, data.status);
+      }
+      else if (data.type === "countdown") {
+        showCountdown();
       }
     }
   );
