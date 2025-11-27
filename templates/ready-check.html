@@ -1,8 +1,12 @@
 <div class="shell-check-wrapper">
 
   <div class="shellgame-buttons">
-    <button id="shell-ready" class="shellgame-btn ready">Ready</button>
-    <button id="shell-no" class="shellgame-btn no">Not Ready</button>
+    {{#if isGM}}
+      <button id="shell-start" class="shellgame-btn start">Start</button>
+    {{else}}
+      <button id="shell-ready" class="shellgame-btn ready">Ready</button>
+      <button id="shell-no" class="shellgame-btn no">Not Ready</button>
+    {{/if}}
   </div>
 
   <ul class="shell-user-list">

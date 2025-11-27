@@ -27,11 +27,11 @@ export class ShellGameReadyCheck extends Application {
   static openWindow() {
     ShellGameReadyCheck.statuses = {};
 
-    const users = (game.users?.contents ?? []).filter(u => u.active);
+    const users = (game.users?.contents ?? [])
+      .filter(u => u.active && !u.isGM);
+
     for (const u of users) {
-      const id = u.id ?? "";
-      if (!id) continue;
-      ShellGameReadyCheck.statuses[id] = "unknown";
+      ShellGameReadyCheck.statuses[u.id!] = "unknown";
     }
 
     new ShellGameReadyCheck().render(true);
@@ -43,8 +43,6 @@ export class ShellGameReadyCheck extends Application {
     for (const win of Object.values(ui.windows)) {
       if (win instanceof ShellGameReadyCheck) win.render(false);
     }
-
-    ShellGameReadyCheck.readyCheck();
   }
 
   static readyCheck() {
@@ -73,8 +71,11 @@ export class ShellGameReadyCheck extends Application {
   }
 
   getData() {
-    const users = (game.users?.contents ?? []).filter(u => u.active);
+    const users = (game.users?.contents ?? [])
+      .filter(u => u.active && !u.isGM);
+    
     return {
+      isGM: game.user?.isGM ?? false,
       users: users.map(u => {
         const id = u.id ?? "";
         return {
@@ -97,6 +98,7 @@ export class ShellGameReadyCheck extends Application {
 
       const tokenName = ShellGameReadyCheck.currentTokenName;
       const forceZoom = game.settings.get("shell-game", "forceZoom");
+
       if (forceZoom && tokenName) {
         const placeables = canvas?.tokens?.placeables ?? [];
         const toks = placeables.filter(t => isMatchingTokenName(t, tokenName));
@@ -123,6 +125,27 @@ export class ShellGameReadyCheck extends Application {
       });
 
       ShellGameReadyCheck.updateStatus(currentUserId, "no");
+    });
+
+    html.find("#shell-start").on("click", () => {
+      if (!game.user?.isGM) return;
+
+      const allReady = Object.values(ShellGameReadyCheck.statuses)
+        .every(st => st === "ready");
+
+      if (!allReady) {
+        ui.notifications?.warn("Not all players are ready.");
+        return;
+      }
+
+      for (const win of Object.values(ui.windows)) {
+        if (win instanceof ShellGameReadyCheck) win.close();
+      }
+
+      const name = ShellGameReadyCheck.currentTokenName;
+      ShellGameReadyCheck.currentTokenName = null;
+
+      if (name) performShellGame(name);
     });
   }
 }
