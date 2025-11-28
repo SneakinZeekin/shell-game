@@ -1,34 +1,26 @@
 <form class="shell-setup-form">
   <div class="shell-setup-body">
-
     {{#if tokens.length}}
       <p>Select a token to clone:</p>
       <ul class="shell-setup-token-list">
-
         {{#each tokens}}
           <li class="shell-setup-token-entry">
             <label>
-
               <input
                 type="radio"
                 name="shell-source-token"
                 value="{{id}}"
                 {{#if @first}}checked{{/if}}
               />
-
-              <img class="shell-token-img" src="{{img}}" alt="{{name}}" />
-
+              <img src="{{img}}" class="shell-token-img" alt="{{name}}" />
               <span class="shell-token-name">{{name}}</span>
-
             </label>
           </li>
         {{/each}}
-
       </ul>
     {{else}}
       <p>No tokens found in the current scene.</p>
     {{/if}}
-
   </div>
 
   <footer class="sheet-footer flexrow">

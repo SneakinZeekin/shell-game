@@ -59,14 +59,16 @@
 }
 
 .shell-token-img {
-  width: 40px;
-  height: 40px;
+  width: 34px;
+  height: 34px;
   object-fit: contain;
   margin: 0 8px;
-  border: 1px solid #333;
+  vertical-align: middle;
   border-radius: 3px;
+  border: 1px solid #333;
 }
 
 .shell-token-name {
   font-size: 14px;
 }
+
