@@ -69,8 +69,6 @@ export class ShellGameReadyCheck extends Application {
       const currentUserId = game.user?.id;
       if (!currentUserId) return;
 
-      game.user?.updateTokenTargets([]);
-
       const tokenName = ShellGameReadyCheck.currentTokenName;
       const forceZoom = game.settings.get("shell-game", "forceZoom");
 
@@ -136,11 +134,9 @@ export class ShellGameReadyCheck extends Application {
 }
 
 async function performShellGame(name: string) {
-  for (const user of game.users?.contents ?? []) {
-    if (user.targets.size > 0) {
-      user.updateTokenTargets([]);
-    }
-  }
+  game.socket?.emit("module.shell-game", {
+    type: "clear-targets"
+  });
 
   const NAME = name;
   const runtimeSetting = Number(game.settings.get("shell-game", "runtimeMs") ?? 8000);

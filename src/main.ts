@@ -66,7 +66,7 @@ Hooks.once("ready", () => {
   game.socket?.on(
     "module.shell-game",
     (data: {
-      type: "start-check" | "close-check" | "status" | "countdown";
+      type: "start-check" | "close-check" | "status" | "countdown" | "clear-targets";
       tokenName?: string;
       userId?: string;
       status?: "ready" | "no";
@@ -84,6 +84,9 @@ Hooks.once("ready", () => {
       }
       else if (data.type === "countdown") {
         showCountdown();
+      }
+      else if (data.type === "clear-targets") {
+        game.user?.updateTokenTargets([]);
       }
     }
   );
