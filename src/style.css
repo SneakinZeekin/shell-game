@@ -48,16 +48,25 @@
   filter: brightness(0.95);
 }
 
-.shell-setup-token-list {
-  list-style: none;
-  padding-left: 0;
-  margin: 0 0 8px;
-}
-
-.shell-setup-token-list li {
-  margin-bottom: 4px;
-}
-
 .shell-button-main {
   flex: 1 1 auto;
+}
+
+.shell-setup-token-entry {
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.shell-token-img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  margin: 0 8px;
+  border: 1px solid #333;
+  border-radius: 3px;
+}
+
+.shell-token-name {
+  font-size: 14px;
 }
