@@ -54,9 +54,12 @@ export class ShellGameSetup extends Application {
             const tokenId = (ev.currentTarget as HTMLInputElement).value;
             ShellGameSetup.selectedTokenId = tokenId;
 
-            const token = canvas.tokens?.get(tokenId);
-            if (token) {
-                canvas.ping(token.object ?? token, { duration: 1000 });
+            const tok = canvas.tokens?.get(tokenId);
+            if (tok) {
+                canvas.ping(tok.center, {
+                    duration: 800,
+                    color: "#2bc3ff"
+                });
             }
         });
 
