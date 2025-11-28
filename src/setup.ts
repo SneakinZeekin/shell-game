@@ -47,12 +47,17 @@ export class ShellGameSetup extends Application {
         return { tokens };
     }
 
-
     activateListeners(html: JQuery) {
         super.activateListeners(html);
 
         html.find("input[name='shell-source-token']").on("change", ev => {
-            ShellGameSetup.selectedTokenId = (ev.currentTarget as HTMLInputElement).value;
+            const tokenId = (ev.currentTarget as HTMLInputElement).value;
+            ShellGameSetup.selectedTokenId = tokenId;
+
+            const token = canvas.tokens?.get(tokenId);
+            if (token) {
+                canvas.ping(token.object ?? token, { duration: 1000 });
+            }
         });
 
         html.find("button[name='shell-create-fake']").on("click", ev => {
