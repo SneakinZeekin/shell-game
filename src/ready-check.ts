@@ -84,6 +84,8 @@ export class ShellGameReadyCheck extends Application {
         status: "ready"
       });
 
+      game.user?.updateTokenTargets([]);
+
       ShellGameReadyCheck.updateStatus(currentUserId, "ready");
     });
 
