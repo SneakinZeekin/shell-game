@@ -68,3 +68,22 @@ export function showCountdown(): Promise<void> {
     resolve();
   });
 }
+
+export function startShellGame(tokenName: string) {
+  const placeables = canvas?.tokens?.placeables ?? [];
+  const tokens = placeables.filter(t => isMatchingTokenName(t, tokenName));
+
+  if (tokens.length < 2) {
+    ui.notifications?.error(
+      `Shell Game: Need at least two tokens named "${tokenName}" in the current scene.`
+    );
+    return;
+  }
+
+  game.socket.emit("module.shell-game", {
+    type: "start-check",
+    tokenName
+  });
+
+  ShellGameReadyCheck.start(tokenName);
+}

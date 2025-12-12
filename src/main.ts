@@ -1,4 +1,4 @@
-import { ShellGameReadyCheck } from "./ready-check";
+import { ShellGameReadyCheck, startShellGame } from "./ready-check";
 import { ShellGameSetup } from "./setup";
 import { registerSettings } from "./settings";
 import { isMatchingTokenName, showCountdown } from "./utils";
@@ -115,7 +115,11 @@ Hooks.on("getSceneControlButtons", controls => {
         title: "Start Shell Game",
         icon: "fas fa-random",
         button: true,
-        onClick: () => ui.notifications.info("Shell Game start placeholder")
+        onClick: () => {
+          const tokenName = "Metrion";
+
+          startShellGame(tokenName);
+        }
       }
     ]
   });
