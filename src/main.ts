@@ -99,7 +99,9 @@ Hooks.on("getSceneControlButtons", controls => {
     name: "shellgame",
     title: "Shell Game",
     icon: "fas fa-dice",
-    activeTool: "shellgame-setup", 
+    layer: "controls",       
+    activeTool: "shellgame-setup",
+    visible: true,
     tools: [
       {
         name: "shellgame-setup",
@@ -113,9 +115,10 @@ Hooks.on("getSceneControlButtons", controls => {
         title: "Start Shell Game",
         icon: "fas fa-random",
         button: true,
-        onClick: () => ui.notifications.info("Shell Game Start placeholder")
+        onClick: () => ui.notifications.info("Shell Game start placeholder")
       }
     ]
   });
 });
+
 
