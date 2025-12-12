@@ -93,30 +93,27 @@ Hooks.once("ready", () => {
 });
 
 Hooks.on("getSceneControlButtons", controls => {
+  if (!game.user?.isGM) return;
+
   controls.push({
     name: "shellgame",
     title: "Shell Game",
-    icon: "fas fa-hat-wizard",   // this is the big icon on the left bar
-    layer: "controls",
-
+    icon: "fas fa-dice",
+    activeTool: "shellgame-setup", 
     tools: [
       {
         name: "shellgame-setup",
         title: "Setup Shell Game",
         icon: "fas fa-cog",
         button: true,
-        onClick: () => {
-          ShellGameSetup.openWindow();
-        }
+        onClick: () => ShellGameSetup.openWindow()
       },
       {
         name: "shellgame-start",
         title: "Start Shell Game",
         icon: "fas fa-random",
         button: true,
-        onClick: () => {
-          ui.notifications.info("Use /shell or the Ready Check window to start.");
-        }
+        onClick: () => ui.notifications.info("Shell Game Start placeholder")
       }
     ]
   });
