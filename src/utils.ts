@@ -69,21 +69,14 @@ export function showCountdown(): Promise<void> {
   });
 }
 
-export function startShellGame(tokenName: string) {
-  const placeables = canvas?.tokens?.placeables ?? [];
-  const tokens = placeables.filter(t => isMatchingTokenName(t, tokenName));
-
-  if (tokens.length < 2) {
-    ui.notifications?.error(
-      `Shell Game: Need at least two tokens named "${tokenName}" in the current scene.`
-    );
-    return;
-  }
-
-  game.socket.emit("module.shell-game", {
-    type: "start-check",
-    tokenName
-  });
-
-  ShellGameReadyCheck.start(tokenName);
+export function playReadySound() {
+  AudioHelper.play(
+    {
+      src: "sounds/notify.wav",
+      volume: 0.8,
+      autoplay: true,
+      loop: false
+    },
+    true
+  );
 }

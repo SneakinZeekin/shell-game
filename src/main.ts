@@ -1,7 +1,7 @@
 import { ShellGameReadyCheck, startShellGame } from "./ready-check";
 import { ShellGameSetup } from "./setup";
 import { registerSettings } from "./settings";
-import { isMatchingTokenName, showCountdown } from "./utils";
+import { isMatchingTokenName, showCountdown, playReadySound } from "./utils";
 import "./style.css";
 
 Hooks.once("init", () => {
@@ -74,6 +74,7 @@ Hooks.once("ready", () => {
       console.log("Shell Game | socket received:", data);
 
       if (data.type === "start-check" && data.tokenName) {
+        playReadySound();
         ShellGameReadyCheck.start(data.tokenName);
       } else if (data.type === "close-check") {
         for (const win of Object.values(ui.windows)) {

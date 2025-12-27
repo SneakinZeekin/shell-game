@@ -237,30 +237,26 @@ async function performShellGame(name: string) {
   while (performance.now() - start < TOTAL_MS) {
     const dur = rint(MOVE_MS_MIN, MOVE_MS_MAX);
 
+    const tokenIndices = toks.map((_, i) => i);
     const k = rint(2, toks.length);
-    const chosenSlots = pickRandomSlots(k);
 
-    const cyclePairs = buildRotMap(chosenSlots);
+    const chosenTokens = shuffleArr([...tokenIndices]).slice(0, k);
+    const destinationSlots = shuffleArr(
+      chosenTokens.map(ti => slotOfToken[ti])
+    );
 
     const moves: Promise<void>[] = [];
-    for (const [fromSlot, toSlot] of cyclePairs) {
-      const fromTokIdx = tokenAtSlot[fromSlot];
-      moves.push(moveAndWait(toks[fromTokIdx], slots[toSlot], dur));
+
+    for (let i = 0; i < chosenTokens.length; i++) {
+      const tokIdx = chosenTokens[i];
+      const destSlot = destinationSlots[i];
+      moves.push(moveAndWait(toks[tokIdx], slots[destSlot], dur));
     }
 
     await Promise.all(moves);
 
-    const newTokenAtSlot = tokenAtSlot.slice();
-    for (const [fromSlot, toSlot] of cyclePairs) {
-      const movedTokIdx = tokenAtSlot[fromSlot];
-      newTokenAtSlot[toSlot] = movedTokIdx;
-    }
-
-    tokenAtSlot = newTokenAtSlot;
-
-    for (let s = 0; s < tokenAtSlot.length; s++) {
-      const tokIdx = tokenAtSlot[s];
-      slotOfToken[tokIdx] = s;
+    for (let i = 0; i < chosenTokens.length; i++) {
+      slotOfToken[chosenTokens[i]] = destinationSlots[i];
     }
   }
 }
