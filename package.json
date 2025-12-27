@@ -4,7 +4,7 @@
   "description": "A token shuffling module for Foundry VTT.",
   "scripts": {
     "build": "vite build && npm run build:copy",
-    "build:copy": "copyfiles module.json templates/** dist",
+    "build:copy": "copyfiles module.json templates/** sounds/** dist",
     "dev": "vite --watch",
     "package": "npm run build && npm run package:prep && npm run package:zip && npm run package:clean",
     "package:prep": "rimraf release/shell-game && mkdirp release/shell-game && copyfiles -u 1 \"dist/**/*\" release/shell-game",
