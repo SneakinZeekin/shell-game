@@ -72,7 +72,7 @@ export function showCountdown(): Promise<void> {
 export function playReadySound() {
   AudioHelper.play(
     {
-      src: "sounds/notify.wav",
+      src: "modules/shell-game/sounds/notif.mp3",
       volume: 0.8,
       autoplay: true,
       loop: false
