@@ -164,9 +164,13 @@ async function performShellGame(name: string) {
   const minMoveSetting = Number(game.settings.get("shell-game", "minMoveMs") ?? 350);
   const maxMoveSetting = Number(game.settings.get("shell-game", "maxMoveMs") ?? 350);
 
-  const TOTAL_MS = Math.max(1000, runtimeSetting);
-  const MOVE_MS_MIN = Math.min(minMoveSetting, maxMoveSetting);
-  const MOVE_MS_MAX = Math.max(minMoveSetting, maxMoveSetting);
+  const TOTAL_MS_RAW = isNaN(runtimeSetting) ? 8000 : runtimeSetting;
+  const MIN_RAW = isNaN(minMoveSetting) ? 350 : minMoveSetting;
+  const MAX_RAW = isNaN(maxMoveSetting) ? 350 : maxMoveSetting;
+
+  const TOTAL_MS = Math.max(1000, TOTAL_MS_RAW);
+  const MOVE_MS_MIN = Math.min(MIN_RAW, MAX_RAW);
+  const MOVE_MS_MAX = Math.max(MIN_RAW, MAX_RAW);
 
   const toks =
     (canvas.tokens?.placeables ?? []).filter(t =>
@@ -189,6 +193,17 @@ async function performShellGame(name: string) {
   const sleep = (ms: number) =>
     new Promise<void>(res => setTimeout(res, ms));
 
+  const shuffleArr = <T>(arr: T[]): T[] => {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  };
+
+  const pickRandomSlots = (k: number) =>
+    shuffleArr([...slots.keys()]).slice(0, k);
+
   async function waitMs(ms: number) {
     if (game.modules.get("warpgate")?.active) {
       await warpgate.wait(ms);
@@ -205,15 +220,18 @@ async function performShellGame(name: string) {
     await waitMs(dur + 20);
   }
 
-  const shuffleArr = <T>(arr: T[]): T[] => {
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
+  function buildRotMap(slotIdxs: number[]): [number, number][] {
+    const order = shuffleArr([...slotIdxs]);
+    const dir = Math.random() < 0.5 ? 1 : -1;
+    const n = order.length;
+    const pairs: [number, number][] = [];
+    for (let i = 0; i < n; i++) {
+      const from = order[i];
+      const to = order[(i + dir + n) % n];
+      pairs.push([from, to]);
     }
-    return arr;
-  };
-
-  const LIFT = 40;
+    return pairs;
+  }
 
   const start = performance.now();
   while (performance.now() - start < TOTAL_MS) {
@@ -221,6 +239,7 @@ async function performShellGame(name: string) {
 
     const k = rint(2, toks.length);
     const chosenSlots = shuffleArr([...slots.keys()]).slice(0, k);
+
     const shuffledSlots = shuffleArr([...chosenSlots]);
 
     let safety = 0;
@@ -228,38 +247,15 @@ async function performShellGame(name: string) {
       shuffleArr(shuffledSlots);
     }
 
-    const pairs: [number, number][] =
-      chosenSlots.map((fromSlot, i) => [fromSlot, shuffledSlots[i]]);
-
-    await Promise.all(
-      pairs.map(([fromSlot]) => {
-        const tokIdx = tokenAtSlot[fromSlot];
-        const tok = toks[tokIdx];
-        return tok.document.update(
-          { elevation: (tok.document.elevation ?? 0) + LIFT },
-          { animate: false }
-        );
-      })
-    );
+    const pairs: [number, number][] = chosenSlots.map((fromSlot, i) => [fromSlot, shuffledSlots[i]]);
 
     const moves: Promise<void>[] = [];
     for (const [fromSlot, toSlot] of pairs) {
-      const tokIdx = tokenAtSlot[fromSlot];
+      const tokIdx = tokenAtSlot[fromSlot];             
       moves.push(moveAndWait(toks[tokIdx], slots[toSlot], dur));
     }
 
     await Promise.all(moves);
-
-    await Promise.all(
-      pairs.map(([fromSlot]) => {
-        const tokIdx = tokenAtSlot[fromSlot];
-        const tok = toks[tokIdx];
-        return tok.document.update(
-          { elevation: (tok.document.elevation ?? 0) - LIFT },
-          { animate: false }
-        );
-      })
-    );
 
     const newTokenAtSlot = tokenAtSlot.slice();
     for (const [fromSlot, toSlot] of pairs) {
@@ -270,7 +266,8 @@ async function performShellGame(name: string) {
     tokenAtSlot = newTokenAtSlot;
 
     for (let slot = 0; slot < tokenAtSlot.length; slot++) {
-      slotOfToken[tokenAtSlot[slot]] = slot;
+      const tokIdx = tokenAtSlot[slot];
+      slotOfToken[tokIdx] = slot;
     }
   }
 }
